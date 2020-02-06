@@ -37,17 +37,21 @@ import memcacheConstants
 from membase.api.exception import CBQError
 from deepdiff import DeepDiff
 
-try:
-    CHECK_FLAG = False
-    if (testconstants.TESTRUNNER_CLIENT in list(os.environ.keys())) and os.environ[testconstants.TESTRUNNER_CLIENT] == testconstants.PYTHON_SDK:
-        from sdk_client import SDKSmartClient as VBucketAwareMemcached
-        from sdk_client import SDKBasedKVStoreAwareSmartClient as KVStoreAwareSmartClient
-    else:
-        CHECK_FLAG = True
-        from memcached.helper.data_helper import VBucketAwareMemcached, KVStoreAwareSmartClient
-except Exception as e:
-    CHECK_FLAG = True
-    from memcached.helper.data_helper import VBucketAwareMemcached, KVStoreAwareSmartClient
+CHECK_FLAG = False
+from sdk_client import SDKSmartClient as VBucketAwareMemcached
+from sdk_client import SDKBasedKVStoreAwareSmartClient as KVStoreAwareSmartClient
+
+# try:
+#     CHECK_FLAG = False
+#     if (testconstants.TESTRUNNER_CLIENT in list(os.environ.keys())) and os.environ[testconstants.TESTRUNNER_CLIENT] == testconstants.PYTHON_SDK:
+#         from sdk_client import SDKSmartClient as VBucketAwareMemcached
+#         from sdk_client import SDKBasedKVStoreAwareSmartClient as KVStoreAwareSmartClient
+#     else:
+#         CHECK_FLAG = True
+#         from memcached.helper.data_helper import VBucketAwareMemcached, KVStoreAwareSmartClient
+# except Exception as e:
+#     CHECK_FLAG = True
+#     from memcached.helper.data_helper import VBucketAwareMemcached, KVStoreAwareSmartClient
 
 # TODO: Setup stacktracer
 # TODO: Needs "easy_install pygments"
@@ -893,7 +897,6 @@ class GenericLoadingTask(Thread, Task):
         try:
             self._process_values_for_create(key_val)
             client = shared_client or self.client
-
 
             client.setMulti(self.exp, self.flag, key_val, self.pause, self.timeout, parallel=False, collection=self.collection)
         except (MemcachedError, ServerUnavailableException, socket.error, EOFError, AttributeError, RuntimeError) as error:
