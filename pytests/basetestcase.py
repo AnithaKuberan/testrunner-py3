@@ -655,10 +655,8 @@ class BaseTestCase(unittest.TestCase):
             if self.enable_time_sync:
                 self._set_time_sync_on_buckets(['default'])
 
-            self.collection_name["default"]=[]
-
             if self.collection:
-                self.create_scope_collection(scope_num=self.scope_num, collection_num=self.collection_num)
+                self.collection_name["default"] = self.create_scope_collection(scope_num=self.scope_num, collection_num=self.collection_num)
 
 
 
@@ -737,7 +735,6 @@ class BaseTestCase(unittest.TestCase):
                                              for i in range(num_buckets)])
         for i in range(num_buckets):
             name = self.sasl_bucket_name + str(i)
-            self.collection_name[name]=[]
 
     def _create_standard_buckets(self, server, num_buckets, server_id=None, bucket_size=None):
         if not num_buckets:
@@ -782,7 +779,6 @@ class BaseTestCase(unittest.TestCase):
 
         for i in range(num_buckets):
             name = 'standard_bucket' + str(i)
-            self.collection_name[name]=[]
             if self.collection:
                 if self.standard_buckets_scope[i] is not list:
                     scope_num=self.standard_buckets_scope[i]
@@ -790,7 +786,8 @@ class BaseTestCase(unittest.TestCase):
                 else:
                     scope_num=self.standard_buckets_scope[i].remove
                     collection_num = self.standard_buckets_scope[i]
-                self.create_scope_collection(scope_num=scope_num, collection_num=collection_num, bucket=name)
+                self.collection_name[name] = self.create_scope_collection(scope_num=scope_num,
+                                                                          collection_num=collection_num, bucket=name)
 
     def _create_buckets(self, server, bucket_list, server_id=None, bucket_size=None):
         if server_id is None:
@@ -829,8 +826,6 @@ class BaseTestCase(unittest.TestCase):
         if self.enable_time_sync:
             self._set_time_sync_on_bucket( bucket_list )
 
-        for bucket_name in bucket_list:
-            self.collection_name[bucket_name]=[]
 
     def _create_memcached_buckets(self, server, num_buckets, server_id=None, bucket_size=None):
         if not num_buckets:
@@ -947,13 +942,18 @@ class BaseTestCase(unittest.TestCase):
                                 only_store_hash=True, batch_size=1, pause_secs=1, timeout_secs=30,
                                 proxy_client=None, collection=None):
         tasks = []
-
         for bucket in self.buckets:
-            gen = copy.deepcopy(kv_gen)
-            try :
+            if self.collection == True:
+                self.collection_name[bucket.name]=Collections_Rest(self.master).get_collection(bucket.name)
+            try:
                 len(self.collection_name[bucket.name])
             except KeyError:
-                self.collection_name[bucket.name] =[]
+                self.collection_name[bucket.name] = []
+
+            gen = copy.deepcopy(kv_gen)
+            print("collection name is {}".format(self.collection_name))
+            print("sleeping for 10 seconds")
+            self.sleep(10)
             if not collection and (len(self.collection_name[bucket.name]) > 0):
                 for collections in self.collection_name[bucket.name]:
                     gen = copy.deepcopy(kv_gen)
@@ -963,6 +963,7 @@ class BaseTestCase(unittest.TestCase):
                                                                       op_type, exp, flag, only_store_hash,
                                                                       batch_size, pause_secs, timeout_secs,
                                                                       proxy_client, compression=self.sdk_compression, collection=collections))
+
                     else:
                         self._load_memcached_bucket(server, gen, bucket.name, collections)
 
@@ -1168,13 +1169,9 @@ class BaseTestCase(unittest.TestCase):
         if len(self.buckets) > 1:
             batch_size = 1
         for bucket in self.buckets:
-            try :
-                len(self.collection_name[bucket.name])
-            except KeyError:
-                self.collection_name[bucket.name] =[]
-            if bucket.type == 'memcached':
-                continue
-            #self.collection_bucket=self.collection_name[bucket]
+            print("collection name is {}".format(self.collection_name[bucket.name]))
+            print("sleeping for 10 seconds")
+            self.sleep(10)
             if not collection_name and (len(self.collection_name[bucket.name]) > 0):
                 for collections in self.collection_name[bucket.name]:
                     tasks.append(self.cluster.async_verify_data(server, bucket, bucket.kvs[kv_store], max_verify,
@@ -2789,7 +2786,7 @@ class BaseTestCase(unittest.TestCase):
         Collections_Rest(self.master).delete_scope(scope, bucket)
 
     def create_scope_collection(self, scope_num, collection_num, bucket="default"):
-        Collections_Rest(self.master).create_scope_collection(self.collection_name, scope_num, collection_num, bucket)
+        self.collection_name[bucket] = Collections_Rest(self.master).create_scope_collection(scope_num, collection_num, bucket)
 
     def _record_vbuckets(self, master, servers):
         map = dict()
