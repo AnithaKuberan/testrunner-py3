@@ -420,7 +420,7 @@ class SDKClient(object):
             else:
                 rvs = self.default_collection.upsert_multi(keys, ttl=ttl, format=format, persist_to=persist_to, replicate_to=replicate_to)
         except CouchbaseError as exc:
-            print("hit couchbase error {} 1 for collection {}".format(exc, collection))
+            print("hit couchbase error for collection {}".format(collection))
             print("retrying")
             self.upsert_multi(keys, ttl=0, format=format, persist_to=persist_to, replicate_to=replicate_to)
 
