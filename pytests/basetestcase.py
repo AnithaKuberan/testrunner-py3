@@ -1131,7 +1131,7 @@ class BaseTestCase(unittest.TestCase):
                                                                    bucket, self.protocol,
                                                                    ep_items_remaining, "==", 0))
         for task in tasks:
-            task.result(timeout)
+            task.result(timeout=1000)
 
     """Waits for max_unacked_bytes = 0 on all servers and buckets in a cluster.
 
