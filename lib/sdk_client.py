@@ -344,14 +344,7 @@ class SDKClient(object):
             else:
                 return self.default_collection.remove(key, cas=cas, quiet=quiet, persist_to=persist_to, replicate_to=replicate_to)
         except CouchbaseError as e:
-            try:
-                time.sleep(10)
-                if collection:
-                    return self.collection.remove(key, cas=cas, quiet=quiet, persist_to=persist_to, replicate_to=replicate_to)
-                else:
-                    return self.default_collection.remove(key, cas=cas, quiet=quiet, persist_to=persist_to, replicate_to=replicate_to)
-            except CouchbaseError as e:
-                raise
+            self.remove(key, cas=0, quiet=True, persist_to=0, replicate_to=0, collection=None)
 
     def delete(self, keys, quiet=True, persist_to=0, replicate_to=0, collection=None):
         return self.remove(self, keys, quiet=quiet, persist_to=persist_to, replicate_to=replicate_to, collection=collection)
