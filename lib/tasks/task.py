@@ -800,7 +800,6 @@ class GenericLoadingTask(Thread, Task):
         value = None
         try:
             o, c, value = self.client.get(key, collection=self.collection)
-            print("the output of get is {} {} and {}".format(o, c, value))
             if value is None:
                 return
 
@@ -828,7 +827,8 @@ class GenericLoadingTask(Thread, Task):
         try:
             self.client.set(key, self.exp, self.flag, value, collection=self.collection)
             if self.only_store_hash:
-                value = str(crc32.crc32_hash(value))
+                if value != None:
+                    value = str(crc32.crc32_hash(value))
             partition.set(key, value, self.exp, self.flag)
         except BaseException as error:
             self.state = FINISHED
