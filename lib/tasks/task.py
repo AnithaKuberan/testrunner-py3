@@ -800,6 +800,7 @@ class GenericLoadingTask(Thread, Task):
         value = None
         try:
             o, c, value = self.client.get(key, collection=self.collection)
+            print("the output of get is {} {} and {}".format(o, c, value))
             if value is None:
                 return
 
