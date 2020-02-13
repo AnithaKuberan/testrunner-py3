@@ -639,6 +639,7 @@ class StatsWaitTask(Task):
                 self.state = FINISHED
                 self.set_exception(ex)
                 return
+        print("the value of stat_result {} and self.value is {}".format(stat_result, self.value))
         if not self._compare(self.comparison, float(stat_result), self.value):
             self.log.warn("Not Ready: %s %s %s %s expected on %s, %s bucket" % (self.stat, stat_result,
                       self.comparison, self.value, self._stringify_servers(), self.bucket))
