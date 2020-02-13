@@ -671,8 +671,9 @@ class StatsWaitTask(Task):
         return self.conns[server]
 
     def _compare(self, cmp_type, a, b):
-        if isinstance(b, int) and a.isdigit():
-            a = int(a)
+        print("the value of a and b is {} {}".format(a, b))
+        if isinstance(b, float) and a.isdigit():
+            a = float(a)
         elif isinstance(b, int) and not a.isdigit():
                 return False
         if (cmp_type == StatsWaitTask.EQUAL and a == b) or\
