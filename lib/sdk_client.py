@@ -555,15 +555,7 @@ class SDKClient(object):
                 rv = self.default_collection.get(key, ttl=ttl, quiet=quiet, replica=replica, no_format=no_format)
             return self.__translate_get(rv)
         except CouchbaseError as e:
-            try:
-                time.sleep(10)
-                if collection:
-                    rv = self.collection.get(key, ttl=ttl, quiet=quiet, replica=replica, no_format=no_format)
-                else:
-                    rv = self.default_collection.get(key, ttl=ttl, quiet=quiet, replica=replica, no_format=no_format)
-                return self.__translate_get(rv)
-            except CouchbaseError as e:
-                raise
+            self.get(key, ttl=0, quiet=True, replica=False, no_format=False, collection=None)
 
     def rget(self, key, replica_index=None, quiet=True, collection=None):
         try:
