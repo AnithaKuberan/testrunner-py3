@@ -639,8 +639,8 @@ class StatsWaitTask(Task):
                 self.state = FINISHED
                 self.set_exception(ex)
                 return
-        print("the value of stat_result {} and self.value is {}".format(stat_result, self.value))
-        if not self._compare(self.comparison, float(stat_result), self.value):
+        
+        if not self._compare(self.comparison, str(stat_result), int(self.value)):
             self.log.warn("Not Ready: %s %s %s %s expected on %s, %s bucket" % (self.stat, stat_result,
                       self.comparison, self.value, self._stringify_servers(), self.bucket))
             task_manager.schedule(self, 5)
@@ -671,11 +671,10 @@ class StatsWaitTask(Task):
         return self.conns[server]
 
     def _compare(self, cmp_type, a, b):
-        print("the value of a and b is {} {}".format(a, b))
-        if isinstance(b, float) and a.isdigit():
-            a = float(a)
+        if isinstance(b, int) and a.isdigit():
+            a = int(a)
         elif isinstance(b, int) and not a.isdigit():
-                return False
+            return False
         if (cmp_type == StatsWaitTask.EQUAL and a == b) or\
             (cmp_type == StatsWaitTask.NOT_EQUAL and a != b) or\
             (cmp_type == StatsWaitTask.LESS_THAN_EQ and a <= b) or\
