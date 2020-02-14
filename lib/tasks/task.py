@@ -824,6 +824,8 @@ class GenericLoadingTask(Thread, Task):
         except BaseException as error:
             self.state = FINISHED
             print("the key is {}".format(key))
+            print("check the value of the key")
+            time.sleep(100)
             self.set_exception(error)
 
         try:
