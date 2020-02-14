@@ -288,7 +288,7 @@ class RebalanceHighOpsWithPillowFight(BaseTestCase):
         if RestConnection(server).get_nodes_version()[:5] < '5':
             bkt = Bucket('couchbase://{0}/{1}'.format(server.ip, bucket.name))
         else:
-            cluster = Cluster("couchbase://{}".format(server.ip), ClusterOptions(PasswordAuthenticator(self.bucket, 'password')))
+            cluster = Cluster("couchbase://{}".format(server.ip), ClusterOptions(PasswordAuthenticator(bucket.name, 'password')))
             bkt = cluster.open_bucket(bucket.name)
 
         rest = RestConnection(self.master)
