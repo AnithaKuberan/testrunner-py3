@@ -6,7 +6,8 @@ from basetestcase import BaseTestCase
 from membase.api.rest_client import RestConnection, RestHelper
 from membase.helper.cluster_helper import ClusterOperationHelper
 from couchbase.bucket import Bucket
-from couchbase.cluster import Cluster, PasswordAuthenticator
+from couchbase.cluster import Cluster, ClusterOptions
+from couchbase_core.cluster import PasswordAuthenticator
 from couchbase.exceptions import NotFoundError
 
 from lib.couchbase_helper.tuq_helper import N1QLHelper
@@ -287,10 +288,7 @@ class RebalanceHighOpsWithPillowFight(BaseTestCase):
         if RestConnection(server).get_nodes_version()[:5] < '5':
             bkt = Bucket('couchbase://{0}/{1}'.format(server.ip, bucket.name))
         else:
-            cluster = Cluster("couchbase://{}".format(server.ip))
-            auth = PasswordAuthenticator(server.rest_username,
-                                         server.rest_password)
-            cluster.authenticate(auth)
+            cluster = Cluster("couchbase://{}".format(server.ip), ClusterOptions(PasswordAuthenticator(self.bucket, 'password')))
             bkt = cluster.open_bucket(bucket.name)
 
         rest = RestConnection(self.master)
