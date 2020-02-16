@@ -642,7 +642,7 @@ class DiskAutoFailoverBasetest(AutoFailoverBaseTest):
                          "Actual timeout set : {1}".format(self.timeout,
                                                            settings.timeout))
         self.assertTrue(settings.failoverOnDataDiskIssuesEnabled, "Failed to enable disk autofailover for the cluster")
-        self.assertEqual(self.disk_timeout, settings.failoverOnDataDiskIssuesTimeout,
+        self.assertEqual(int(self.disk_timeout), settings.failoverOnDataDiskIssuesTimeout,
                          "Incorrect timeout period for disk failover set. Expected Timeout: {0} "
                          "Actual timeout: {1}".format(self.disk_timeout, settings.failoverOnDataDiskIssuesTimeout))
 
