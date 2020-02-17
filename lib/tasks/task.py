@@ -823,8 +823,6 @@ class GenericLoadingTask(Thread, Task):
             value = value[0:index] + random.choice(string.ascii_uppercase) + value[index + 1:]
         except BaseException as error:
             self.state = FINISHED
-            print("the key is {}".format(key))
-            print("check the value of the key")
             time.sleep(100)
             self.set_exception(error)
 
