@@ -122,7 +122,7 @@ class MemcachedClient(object):
             cmd, len(key), extraHeaderLength, dtype, vbucketId,
                 len(key) + len(extraHeader) + len(val) + len(extended_meta_data), opaque, cas)
         #self.log.info("--->unpack msg:magic,cmd,keylen,extralen/valelen/extlen,opaque,cas={}".format(struct.unpack(fmt,msg)))
-        _, w, _ = select.select([], [self.s], [], self.timeout)
+        _, w, _ = select.poll([], [self.s], [], self.timeout)
         if w:
             #self.log.info("--->_send:{},{},{},{},{}".format(type(msg),type(extraHeader),type(key),type(val),type(extended_meta_data)))
             #self.log.info("--->_send:{},{},{},{},{}".format(msg,extraHeader,key,val,extended_meta_data))
@@ -157,7 +157,7 @@ class MemcachedClient(object):
     def _recvMsg(self):
         response = b""
         while len(response) < MIN_RECV_PACKET:
-            r, _, _ = select.select([self.s], [], [], self.timeout)
+            r, _, _ = select.poll([self.s], [], [], self.timeout)
             if r:
                 data = self.s.recv(MIN_RECV_PACKET - len(response))
                 if data == '':
@@ -192,7 +192,7 @@ class MemcachedClient(object):
 
         rv = b""
         while remaining > 0:
-            r, _, _ = select.select([self.s], [], [], self.timeout)
+            r, _, _ = select.poll([self.s], [], [], self.timeout)
             if r:
                 data = self.s.recv(remaining)
                 if data == '':
