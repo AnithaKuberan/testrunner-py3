@@ -1493,6 +1493,9 @@ class RestConnection(object):
             log.info('fail_over node {0} successful'.format(otpNode))
         else:
             log.error('fail_over node {0} error : {1}'.format(otpNode, content))
+            log.info("Abort job manually)
+            import time
+            time.sleep(1000)
             raise FailoverFailedException(content)
         return status
 
