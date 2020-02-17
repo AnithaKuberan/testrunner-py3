@@ -284,7 +284,7 @@ class FailoverTests(FailoverBaseTest):
         # Comparison of all data if required
         if not self.withMutationOps:
             self.sleep(60)
-            self.data_analysis_all(record_static_data_set, self.servers, self.buckets, path=None, addedItems=None)
+            #self.data_analysis_all(record_static_data_set, self.servers, self.buckets, path=None, addedItems=None)
 
         # Verify if vbucket sequence numbers and failover logs are as expected
         # We will check only for version  > 2.5.* and if the failover is graceful
