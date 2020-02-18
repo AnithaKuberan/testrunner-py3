@@ -534,9 +534,8 @@ class AutoFailoverBaseTest(BaseTestCase):
     def _auto_failover_message_present_in_logs(self, ipaddress):
         for d in self.rest.get_logs(20):
             print(list(d.values())
-            
-        return any("Rebalance interrupted due to auto-failover of nodes ['ns_1@{0}'].".format(ipaddress) in
-                   list(d.values())[2] for d in self.rest.get_logs(20))
+            return any("Rebalance interrupted due to auto-failover of nodes ['ns_1@{0}'].".format(ipaddress) in
+                   list(d.values()))
 
     def wait_for_failover_or_assert(self, expected_failover_count, timeout):
         time_start = time.time()
