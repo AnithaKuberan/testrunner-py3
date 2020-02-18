@@ -189,7 +189,6 @@ class MemcachedClient(object):
         for descriptor, Event in fdVsEvent:
             if descriptor:
                 return self.s.recv(amount)
-            raise TimeoutError(30)
             break
 
 
