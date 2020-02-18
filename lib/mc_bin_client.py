@@ -127,6 +127,7 @@ class MemcachedClient(object):
         self.collection_map = {}
         self.log = logger.Logger.get_logger()
         self.collections_supported = False
+        self.pollerObject = select.poll()
 
 
     def _createConn(self):
@@ -134,15 +135,16 @@ class MemcachedClient(object):
             # IPv4
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            self.pollerObject.register(socket, select.POLLIN)
             return self.s.connect_ex((self.host, self.port))
         except:
             # IPv6
             self.host = self.host.replace('[', '').replace(']', '')
             self.s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
             self.s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            self.pollerObject.register(socket, select.POLLIN)
             return self.s.connect_ex((self.host, self.port, 0, 0))
-        self.pollerObject = select.poll()
-        self.pollerObject.register(socket, select.POLLIN)
+
 
     def reconnect(self):
         self.s.close()
