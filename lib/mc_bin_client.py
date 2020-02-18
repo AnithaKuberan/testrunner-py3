@@ -191,12 +191,6 @@ class MemcachedClient(object):
                 return self.s.recv(amount)
             raise TimeoutError(30)
             break
-        #
-        # ready = select.select([self.s], [], [], 30)
-        # if ready[0]:
-
-
-
 
 
     def _recvMsg(self):
