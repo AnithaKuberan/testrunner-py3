@@ -1676,7 +1676,7 @@ class BaseTestCase(unittest.TestCase):
                                                                                      comparisonMap=comp_map)
             isNotSame, summary, result = self.result_analyzer.analyze_all_result(compare_vbucket_seqnos_result,
                                                                                  addedItems=False, deletedItems=False,
-                                                                                 updatedItems=True)
+                                                                                 updatedItems=False)
         else:
             compare_vbucket_seqnos_result = self.data_analyzer.compare_per_node_stats_dataset(prev_vbucket_stats,
                                                                                               new_vbucket_stats,
@@ -1685,7 +1685,7 @@ class BaseTestCase(unittest.TestCase):
             isNotSame, summary, result = self.result_analyzer.analyze_per_node_result(compare_vbucket_seqnos_result,
                                                                                       addedItems=False,
                                                                                       deletedItems=False,
-                                                                                      updatedItems=True)
+                                                                                      updatedItems=False)
         self.assertTrue(isNotSame, summary)
         self.log.info(" End Verification for vbucket sequence numbers comparison ")
         return new_vbucket_stats
@@ -1786,7 +1786,7 @@ class BaseTestCase(unittest.TestCase):
         self.log.info(" Begin Verification for Active Vs Replica ")
         comparison_result = self.data_analyzer.compare_all_dataset(info, disk_replica_dataset, disk_active_dataset)
         logic, summary, output = self.result_analyzer.analyze_all_result(comparison_result, deletedItems=False,
-                                                                         addedItems=False, updatedItems=True)
+                                                                         addedItems=False, updatedItems=False)
         self.assertTrue(logic, summary)
         self.log.info(" End Verification for Active Vs Replica ")
         return disk_replica_dataset, disk_active_dataset
@@ -1925,21 +1925,21 @@ class BaseTestCase(unittest.TestCase):
         comparison_result_active = self.data_analyzer.compare_all_dataset(info, prev_data_set_active,
                                                                           curr_data_set_active)
         logic_replica, summary_replica, output_replica = self.result_analyzer.analyze_all_result(
-            comparison_result_replica, deletedItems=False, addedItems=False, updatedItems=True)
+            comparison_result_replica, deletedItems=False, addedItems=False, updatedItems=False)
         logic_active, summary_active, output_active = self.result_analyzer.analyze_all_result(comparison_result_active,
                                                                                               deletedItems=False,
                                                                                               addedItems=False,
-                                                                                              updatedItems=True)
+                                                                                              updatedItems=False)
         self.assertTrue(logic_replica, output_replica)
         self.assertTrue(logic_active, output_active)
         self.log.info(" Comparing :: Current :: Active and Replica ")
         comparison_result = self.data_analyzer.compare_all_dataset(info, curr_data_set_active, curr_data_set_replica)
         logic, summary, output = self.result_analyzer.analyze_all_result(comparison_result, deletedItems=False,
-                                                                         addedItems=False, updatedItems=True)
+                                                                         addedItems=False, updatedItems=False)
         self.log.info(" End Verification for data comparison ")
 
     def data_analysis_all(self, prev_data_set, servers, buckets, path=None, mode="disk", deletedItems=False,
-                          addedItems=False, updatedItems=True):
+                          addedItems=False, updatedItems=False):
         """
             Method to do data analysis using cb transfer
             This works at cluster level
@@ -2017,7 +2017,7 @@ class BaseTestCase(unittest.TestCase):
         compare_failovers_result = self.data_analyzer.compare_stats_dataset(prev_failovers_stats, new_failovers_stats,
                                                                             "vbucket_id", comp_map)
         isNotSame, summary, result = self.result_analyzer.analyze_all_result(compare_failovers_result, addedItems=False,
-                                                                             deletedItems=False, updatedItems=True)
+                                                                             deletedItems=False, updatedItems=False)
         self.assertTrue(isNotSame, summary)
         self.log.info(" End Verification for failovers logs comparison ")
         return new_failovers_stats
@@ -2115,7 +2115,7 @@ class BaseTestCase(unittest.TestCase):
         compare_failovers_result = self.data_analyzer.compare_stats_dataset(prev_failovers_stats, new_failovers_stats,
                                                                             "vbucket_id", comp_map)
         isNotSame, summary, result = self.result_analyzer.analyze_all_result(compare_failovers_result, addedItems=False,
-                                                                             deletedItems=False, updatedItems=True)
+                                                                             deletedItems=False, updatedItems=False)
         self.assertTrue(isNotSame, summary)
         self.log.info(" End Verification for Failovers logs comparison ")
         return new_failovers_stats
